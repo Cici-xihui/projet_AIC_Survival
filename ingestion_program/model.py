@@ -62,7 +62,7 @@ class model (BaseEstimator):
         df = pd.DataFrame(Xy, columns=['age', 'sbp', 'dbp', 'A1c', 'bmi', 'gender_male',
         'ethnicity_NonHispanicBlack', 'ethnicity_NonHispanicWhite', 'ethnicity_Other', 'ethnicity_OtherHispanic',
         'time', 'event'])
-        self.baseline_clf.fit(df, duration_col='time', event_col='event', show_progress=True)
+        self.baseline_clf.fit(df, duration_col='time', event_col='event', show_progress=False)
         self.is_trained=True
 
     def predict(self, X):

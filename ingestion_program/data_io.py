@@ -54,37 +54,42 @@ def read_as_df(basename, type="train"):
 
     print('Reading '+ basename + '_' + type+ ' from AutoML format')
     feat_name = pd.read_csv(basename + '_feat.name', header=None)
-    label_name = pd.read_csv(basename + '_label.name', header=None, names =['Class'])
+    #label_name = pd.read_csv(basename + '_label.name', header=None)
+    label_name = ['target', 'event']
     X = pd.read_csv(basename + '_' + type + '.data', sep=' ', names = np.ravel(feat_name))
     [patnum, featnum] = X.shape
     print('Number of examples = %d' % patnum)
     print('Number of features = %d' % featnum)
 
     XY=X
-    Y=[]
-    solution_file = basename + '_' + type + '.solution'
-    if isfile(solution_file):
-    	# This was reading the original multi-column 1-hot encoding
-        Y = data(solution_file)
-        [patnum2, classnum] = Y.shape
-        assert(patnum==patnum2)
-        if classnum==1:
-        	classnum=np.amax(Y)+1
-        	numerical_target=pd.DataFrame({'Class':Y[:,0].astype(int)})
-        else:
-        	Y = pd.read_csv(solution_file, sep=' ', names = np.ravel(label_name))
-        	label_range = np.arange(classnum).transpose()         # This is just a column vector [[0], [1], [2]]
-        	numerical_target = Y.dot(label_range)                 # This is a column vector of dim patnum with numerical categories
-        #print(numerical_target)
+    Y = pd.read_csv(basename + '_' + type + '.solution', sep=' ', names = np.ravel(label_name))
+
+    # Y=[]
+    # solution_file = basename + '_' + type + '.solution'
+    # if isfile(solution_file):
+    # 	# This was reading the original multi-column 1-hot encoding
+    #     Y = data(solution_file)
+    #     [patnum2, classnum] = Y.shape
+    #     assert(patnum==patnum2)
+    #     if classnum==1:
+    #     	classnum=np.amax(Y)+1
+    #     	numerical_target=pd.DataFrame({'Class':Y[:,0].astype(int)})
+    #     else:
+    #     	Y = pd.read_csv(solution_file, sep=' ', names = np.ravel(label_name))
+    #     	label_range = np.arange(classnum).transpose()         # This is just a column vector [[0], [1], [2]]
+    #     	numerical_target = Y.dot(label_range)                 # This is a column vector of dim patnum with numerical categories
+        # print(numerical_target)
         # Here we add the target values as a last column, this is convenient to use seaborn
         # Look at http://seaborn.pydata.org/tutorial/axis_grids.html for other ideas
-        #label_name = pd.DataFrame(['0', '1', '2'], columns=['col'])
+        #label_name = pd.DataFrame(['0', '1'], columns=['col'])
         #print(label_name)
         #nominal_target = pd.Series(np.array(label_name)[numerical_target].ravel()) # Same with nominal categories
         #print('Number of classes = %d' % classnum)
-        XY = X.assign(target=numerical_target) #nominal_target.values)          # Add the last column
+        #XY = X.assign(target=nominal_target.values)          # Add the last column
+    print(X.shape)
+    print(Y.shape)
 
-    return XY
+    return pd.concat([X, Y], axis=1)
 
 # ================ Small auxiliary functions =================
 
@@ -321,11 +326,14 @@ def show_version():
 
 def total_size(o, handlers={}, verbose=False):
     """ Returns the approximate memory footprint an object and all of its contents.
+
     Automatically finds the contents of the following builtin containers and
     their subclasses:  tuple, list, deque, dict, set and frozenset.
     To search other containers, add handlers to iterate over their contents:
+
         handlers = {SomeContainerClass: iter,
                     OtherContainerClass: OtherContainerClass.get_elements}
+
     """
     dict_handler = lambda d: chain.from_iterable(d.items())
     all_handlers = {tuple: iter,
