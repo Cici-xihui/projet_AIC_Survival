@@ -1,9 +1,14 @@
 
 <h1>Evaluation</h1>
-
+<h3>Introduction of the problem</h3>
 <p>
-The problem is a multiclass classification problem. Each sample (an Iris) is characterized by its sepal and petal
-width and length (4 features). You must predict the Iris categories: setosa, virginica, or versicolor.
+The problem is a regression problem. Each sample (a patient) is characterized by the following information:
+  <ul>
+    <li>Age</li>
+    <li>Ethnicity (with a one-hot representation</li>
+    <li>Gender</li>
+  Moreover, a sample is also represented by some medicals information: blood pressure, hemoglobin 
+  concentration, ...(10 features). You must predict the Iris categories: setosa, virginica, or versicolor.
 <br>
 You are given for training a data matrix X_train of dimension num_training_samples x num_features 
 and an array y_train of labels of dimension num_training_samples. You must train a model
