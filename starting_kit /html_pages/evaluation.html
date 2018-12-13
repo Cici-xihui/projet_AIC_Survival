@@ -1,20 +1,45 @@
+<!DOCTYPE html>
+<html>
 
+<body>
 <h1>Evaluation</h1>
 <h3>Introduction of the problem</h3>
-<p>
-The problem is a regression problem. Each sample (a patient) is characterized by the following information:
-  <ul>
-    <li>Age</li>
-    <li>Ethnicity (with a one-hot representation</li>
-    <li>Gender</li>
-  Moreover, a sample is also represented by some medicals information: blood pressure, hemoglobin 
-  concentration, ...(10 features). You must predict the Iris categories: setosa, virginica, or versicolor.
-<br>
-You are given for training a data matrix X_train of dimension num_training_samples x num_features 
-and an array y_train of labels of dimension num_training_samples. You must train a model
-which predicts the labels for two test matrices X_valid and X_test. 
 
-<br>
+<p>
+The problem is a regression problem. The goal is to predict the time a patient survives after his admission in a hospital. To 
+do so, each sample (aka each patient) is characterized by the following information:
+ <ul>
+    <li> Age
+    <li> Ethnicity (with a one-hot representation)
+    <li> Gender
+    <li> Blood pressure (systolic and diastolic)
+    <li> Glycated hemoglobin concentration
+    <li> Body Mass Index (or BMI)
+</ul>
+
+This give you a total of 10 features to predict the following couple:
+<ul>
+  <li> Target: the survival time to predict
+  <li> Event: if the data is censored (the patient left the study or the study stopped too early) 1 else 0
+</ul>
+
+You are given for training a data matrix X_train of dimension 19297 x 10 and an array y_train of labels of dimension 19297 x 2. You must train a model which predicts the labels for two test matrices X_valid and X_test.
+
+<h3>Evaluation metric</h3>
+
+<p>
+To evaluate the performance of your model, you will need a metric: <b>the concordance index</b>. The formula is: 
+
+<br><br>
+In other word, the concordance index is a “global” index for validating the predictive ability of a survival model. It is the fraction of pairs in your data, where the observation with the higher survival time has the higher probability of survival predicted by your model.
+
+<br><br>
+The index is not calculated for every observation/subject. So the c-index can not be interpreted as the risk of a subject. High values mean that your model predicts higher probabilities of survival for higher observed survival times.
+</p>
+
+<h3>Different steps</h3>
+
+<p>
 There are 2 phases:
 <ul>
 <li> <b>Phase 1: development phase. </b> We provide you with labeled training data and unlabeled validation and test data.
@@ -24,13 +49,14 @@ The performance of your LAST submission will be displayed on the leaderboard.
 Your performance on the test set will appear on the leaderboard when the organizers finish checking the submissions. 
 </ul>
 
-This sample competition allows you to submit either:
+During all this sample competition, you are allowed to submit either:
 <ul>
-<li> Only prediction results (no code).
-<li> A pre-trained prediction model. 
-<li> A prediction model that must be trained and tested. 
+<li> Only prediction results (no code)
+<li> A pre-trained prediction model
+<li> A prediction model that must be trained and tested 
 </ul>
 
-The submissions are evaluated using the <b>accuracy</b> metric.
-</p>
+The submissions are evaluated using the above metric: <b>the concordance index</b>.
 
+</body>
+</html>
